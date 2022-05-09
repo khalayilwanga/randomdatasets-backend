@@ -6,7 +6,15 @@ Create Date: 2021-09-26 01:43:31.617254
 
 """
 from alembic import op
+import os
 import sqlalchemy as sa
+
+# dynamically setting database url
+MYSQL_USER =os.environ['MYSQL_USER']
+MYSQL_DB =os.environ['MYSQL_DB']
+MYSQL_PASSWORD=os.environ['MYSQL_PASSWORD']
+#
+e = sa.create_engine(f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@db/{MYSQL_DB}')
 
 
 # revision identifiers, used by Alembic.
@@ -17,10 +25,13 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table('entries',
-     sa.Column('id',sa.Integer,primary_key=True, autoincrement=True),
-     sa.Column('value', sa.Integer, nullable=False),
-    )
+    if sa.inspect(e,).has_table("entries") == True:
+        return
+    else:
+        op.create_table('entries',
+                        sa.Column('id',sa.Integer,primary_key=True, autoincrement=True),
+                        sa.Column('value', sa.Integer, nullable=False),
+                        )
 
 
 def downgrade():
