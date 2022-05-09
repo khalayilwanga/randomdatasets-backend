@@ -12,7 +12,7 @@ db_name = os.environ["MYSQL_DB"]
 
 engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@db/{db_name}')
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
 @contextmanager
