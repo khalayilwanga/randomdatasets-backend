@@ -1,6 +1,10 @@
 from logging.config import fileConfig
 import os
 
+# while using .env file
+# from dotenv import load_dotenv
+# load_dotenv()
+
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
@@ -10,6 +14,14 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
+# dynamically setting database url
+MYSQL_USER =os.environ['MYSQL_USER']
+MYSQL_DB =os.environ['MYSQL_DB']
+MYSQL_PASSWORD=os.environ['MYSQL_PASSWORD']
+
+config.set_main_option("sqlalchemy.url",f'mysql+pymysql://{MYSQL_USER}:{MYSQL_PASSWORD}@db/{MYSQL_DB}')
+
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 fileConfig(config.config_file_name)
@@ -18,9 +30,13 @@ fileConfig(config.config_file_name)
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from models import Base
-target_metadata = [Base.metadata]
-# target_metadata = None
+target_metadata = None
+
+## Using declarative Base in ../models to set metadata
+# import sys
+# sys.path.insert(0,"..")
+# from models import Base
+# target_metadata =Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -40,7 +56,8 @@ def run_migrations_offline():
     script output.
 
     """
-    url = os.path.expandvars(config.get_main_option("sqlalchemy.url"))
+    url = (config.get_main_option("sqlalchemy.url"))
+
     context.configure(
         url=url,
         target_metadata=target_metadata,
