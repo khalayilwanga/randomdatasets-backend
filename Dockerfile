@@ -8,5 +8,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-
-ENTRYPOINT ["alembic", "upgrade","HEAD","&&","python","backend.py"]
+ENTRYPOINT ["/backend/entrypoint.sh" ]
