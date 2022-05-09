@@ -6,11 +6,12 @@ from models import Entry, Base, Colors
 from random import randint
 # env variables
 
-db_user = os.environ("MYSQL_USER")
-db_password = os.environ("MYSQL_PASSWORD")
-db_name = os.environ("MYSQL_DB")
+db_user = os.environ["MYSQL_USER"]
+db_password = os.environ["MYSQL_PASSWORD"]
+db_name = os.environ["MYSQL_DB"]
 
-engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@db:27017/{db_name}')
+engine = create_engine(f'mysql+pymysql://{db_user}:{db_password}@db/{db_name}')
+
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
@@ -112,6 +113,7 @@ def retrieve_latest_color():
         values_exist = s.query(Colors).first()
 
         if (values_exist is None):
+            print("no color,creating one")
             # create color entry then retrieve it
             values = create_color_entry()
             return values
