@@ -6,6 +6,7 @@ app = Flask(__name__)
 cors = CORS(app, )
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+
 def latest_data(n):
     values =db.retrieve_latest_entries(n)
     color = db.retrieve_latest_color()
